@@ -1,10 +1,10 @@
 <?php
 
 //arquivo para criar uma conexão com o banco de dados mysql
-$servidor = 'localhost';
-$usuario = 'root';
-$senha = '';
-$banco = 'hqs';
+$servidor = "localhost";
+$usuario = "root";
+$senha = "";
+$banco = "hqs";
 
 try {
     //criar uma conexão PDO

@@ -40,6 +40,17 @@ $base     = "$h://$site:$porta/$url";
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    
+    <link rel="stylesheet" type="text/css" href="vendor/summernote/summernote.css">
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <script src="js/jquery.maskMoney.min.js"></script>
+
+    <script src="js/jquery.inputmask.min.js"></script>
+    
+    <!-- mascara de data e dia  -->
+    <script src="js/bindings/inputmask.binding.js"></script>
 </head>
 
 <body>
@@ -323,7 +334,6 @@ $base     = "$h://$site:$porta/$url";
     ?>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Parsley para validar -->
@@ -341,6 +351,8 @@ $base     = "$h://$site:$porta/$url";
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
+
+    <script src="vendor/summernote/summernote.min.js"></script>
 </body>
 
 </html>

@@ -3,6 +3,9 @@
   if ( !isset ( $_SESSION["hqs"]["id"] ) ){
     exit;
   }
+  
+  $id = $titulo = $site = "";
+
 ?>
 <div class="container">
 	<h1 class="float-left">Cadastro de Quadrinho</h1>
@@ -94,3 +97,15 @@
 	</form>
 
 </div>
+
+<script>
+	$(document).ready(function() {
+  		$('#resumo').summernote();
+		$('#valor').maskMoney({
+			// modo de separar o valor
+			thousands: ".", decimal: ","
+		});
+		$('#data').inputmask("99/99/9999");
+		$('#numero').inputmask("9999");
+	});
+</script>

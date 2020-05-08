@@ -122,3 +122,19 @@
 		//apagar a imagem antiga
 		unlink ($imagem);
 	}
+
+	// função para formatar data $data 
+	function formatar ( $data ) {
+		// 01/0101 -> 2020-20-20
+		$data = explode("/", $data);
+		// print_r ($data);
+
+		// vai jogar o valor na var $data
+		return $data = $data[2]."-".$data[1]."-".$data[0];
+	}
+
+	// função para tirar os underline 12__ | vai formatar o $texto
+	function retirar ( $texto ) {
+		// qual termo que vai buscar/ser trocado | pelo qual vai trocar | qual vai substituir no lugar
+		return $texto = str_replace("_", "", $texto);
+	}

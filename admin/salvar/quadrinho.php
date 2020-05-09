@@ -8,10 +8,14 @@ if ( $_POST ) {
     include "functions.php";
     include "config/conexao.php";
 
+    $id = $titulo = $data = $numero = $valor = $resumo = $tipo_id = $editora_id = $capa = "";
+
     //print_r ($_POST);
     foreach ( $_POST as $key => $value ) {
         $$key =trim ( $value );
     }
+
+    // print_r ($_FILES); print_r ($_POST);
 
     // verificar se está em branco
     if ( empty ( $titulo) ) {

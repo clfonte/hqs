@@ -33,10 +33,10 @@ if ( $_POST ) {
     print_r( $_FILES);
     $data = formatar ( $data );
     $numero = retirar ( $numero );
-    $valor = formatarValor ($valor);
+    $valor = formatarValor ( $valor );
 
     // não repetir nome da img e colocar - id do usuário
-    echo $arquivo =  time()."-".$_SESSION["hqs"]["id"];
+    echo $arquivo =  time(). "-" . $_SESSION["hqs"]["id"];
 
     if ( empty ( $id ) ) {
         // inserir
@@ -74,7 +74,7 @@ if ( $_POST ) {
             $pastaFotos =  "../fotos/";
             $imagem     = $_FILES["capa"]["name"];
             $nome       = $arquivo;
-            redimensionarImagem($pastaFotos,$imagem,$nome);
+            redimensionarImagem($pastaFotos, $imagem, $nome);
 
             //gravar no banco
             $pdo->commit();
@@ -83,7 +83,7 @@ if ( $_POST ) {
         }
 
         // erro ao gravar
-        echo "<script>alert(''Erro ao salvar ou enviar arquivo para o servidor.);history.back();</script>";
+        echo "<script>alert('Erro ao salvar ou enviar arquivo para o servidor.');history.back();</script>";
         exit;
     }
     echo $consulta->errorInfo()[2];

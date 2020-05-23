@@ -1,6 +1,6 @@
 <?php
   //verificar se não está logado
-  if ( !isset ( $_SESSION["hqs"]["id"] ) ){
+  if ( !isset ( $_SESSION["hqs"]["id"] ) ) {
     exit;
   }
 
@@ -11,12 +11,12 @@
   }
 
   //verificar se existe um quadrinho cadastrado com esta editora
-  $sql = "select id from quadrinho
-  	where editora_id = ? limit 1";
+  $sql = "SELECT id FROM quadrinho
+  	WHERE editora_id = ? LIMIT 1";
   //prepare sql para executar
   $consulta = $pdo->prepare($sql);
   //passar o id do parametro
-  $consulta->bindParam(1, $id);
+  $consulta->bindParam(1,$id);
   //executar o sql
   $consulta->execute();
   //recuperar os dados selecionados
@@ -30,7 +30,7 @@
   }
 
   //excluir a editora
-  $sql = "delete from where id = ? limit 1";
+  $sql = "DELETE FROM editora WHERE id = ? LIMIT 1";
   $consulta = $pdo->prepare($sql);
   $consulta->bindParam(1, $id);
   //verificar se não executou

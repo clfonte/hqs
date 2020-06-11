@@ -4,6 +4,9 @@ if (!isset($_SESSION['hqs']['id'])) {
     exit;
 }
 
+// print_r($_POST);
+// printf($_FILES);
+
 if ( $_POST ) {
     include "functions.php";
     include "config/conexao.php";
@@ -30,7 +33,7 @@ if ( $_POST ) {
     // só grava no banco quando der commit
     $pdo->beginTransaction(); 
 
-    print_r( $_FILES);
+    // print_r( $_FILES);
     $data = formatar ( $data );
     $numero = retirar ( $numero );
     $valor = formatarValor ( $valor );
@@ -57,7 +60,39 @@ if ( $_POST ) {
 
     } else {
         // editar
-    }
+
+        /* echo "<p>capa: $capa</p>";
+        echo $_FILES["capa"]["name"]; */
+
+        // qual arquivo/nome novo que será salvo
+        if ( !empty ( $_FILES["capa"]["name"] ) )
+            $capa = $arquivo; 
+
+            /*nome que já vai gravar no banco
+            echo "<p>capa: $capa</p>";*/
+
+            $sql = "update quadrinho set 
+            titulo = :titulo,
+            numero = :numero,
+            valor  = :valor,
+            resumo = :resumo,
+            capa   = :capa,
+            tipo_id = :tipo_id,
+            editora_id  = :editora_id,
+            data   = :data
+            where id = :id limit 1";
+
+            $consulta = $pdo->prepare($sql);
+            $consulta->bindParam(":titulo", $titulo);
+            $consulta->bindParam(":numero", $numero);
+            $consulta->bindParam(":valor", $valor);
+            $consulta->bindParam(":resumo", $resumo);
+            $consulta->bindParam(":capa", $capa);
+            $consulta->bindParam(":tipo_id", $tipo_id,);
+            $consulta->bindParam(":editora_id", $editora_id);
+            $consulta->bindParam(":data", $data);
+            $consulta->bindParam(":id", $id);
+        }
 
     // executar sql
     if ( $consulta->execute() ) {

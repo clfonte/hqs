@@ -1,5 +1,5 @@
 <?php
-  //verificar se não está logado
+  // verificar se não está logado
   if ( !isset ( $_SESSION["hqs"]["id"] ) ){
     exit;
   }
@@ -13,7 +13,7 @@
 
 	<div class="clearfix"></div>
 
-	<table class="table table-striped table-bordered table-hover">
+	<table class="table table-striped table-bordered table-hover" id="tabela">
 		<thead>
 			<tr>
 				<td>ID</td>
@@ -24,18 +24,18 @@
 		</thead>
 		<tbody>
 			<?php
-				//buscar as editoras alfabeticamente
+				// buscar as editoras alfabeticamente
 				$sql = "select * from editora 
 				order by nome";
 				$consulta = $pdo->prepare($sql);
 				$consulta->execute();
 
 				while ( $dados = $consulta->fetch(PDO::FETCH_OBJ) ) {
-					//separar os dados
+					// separar os dados
 					$id 	= $dados->id;
 					$nome 	= $dados->nome;
 					$site 	= $dados->site;
-					//mostrar na tela
+					// mostrar na tela
 					echo '<tr>
 						<td>'.$id.'</td>
 						<td>'.$nome.'</td>
@@ -59,13 +59,28 @@
 	</table>
 </div>
 <script>
-	//funcao para perguntar se deseja excluir
-	//se sim direcionar para o endereco de exclusão
+	// funcao para perguntar se deseja excluir
+	// se sim direcionar para o endereco de exclusão
 	function excluir( id ) {
-		//perguntar - função confirm
+		// perguntar - função confirm
 		if ( confirm ( "Deseja mesmo excluir?" ) ) {
-			//direcionar para a exclusao
+			// direcionar para a exclusao
 			location.href="excluir/editora/"+id;
 		}
 	}
+
+	// function de dividir a lista em pages separadas
+	$(document).ready( function () {
+    	$('#tabela').DataTable({
+			"language": {
+            "lengthMenu": "Display _MENU_ Registro não encontrado",
+            "zeroRecords": "Registro não encontrado",
+            "info": "Página _PAGE_ de _PAGES_",
+            "infoEmpty": "No records available",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+			"search": "Busca",
+			"previous": "Anterior"
+        }
+		});
+	})
 </script>

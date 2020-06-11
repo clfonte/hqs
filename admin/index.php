@@ -51,6 +51,9 @@ $base     = "$h://$site:$porta/$url";
     
     <!-- mascara de data e dia  -->
     <script src="js/bindings/inputmask.binding.js"></script>
+
+    <!-- datatable -->
+    <link rel="stylesheet" type="text/ccs" href="//cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 </head>
 
 <body>
@@ -352,7 +355,11 @@ $base     = "$h://$site:$porta/$url";
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
 
+    <!-- editor de texto do quadrinho -->
     <script src="vendor/summernote/summernote.min.js"></script>
+
+    <!-- datatable -->
+    <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 </body>
 
 </html>

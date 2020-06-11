@@ -1,10 +1,52 @@
 <?php
-  //verificar se não está logado
-  if ( !isset ( $_SESSION["hqs"]["id"] ) ){
-    exit;
-  }
-  
-  $id = $titulo = $site = "";
+//verificar se não está logado
+if (!isset($_SESSION["hqs"]["id"])) {
+	exit;
+}
+
+include "functions.php";
+
+if (!isset($id)) {
+	$id = "";
+}
+
+// vai criar se não tiver id
+$titulo = $data = $numero = $resumo = $capa = $valor = $tipo_id = $editora_id = $imagem = $nome = "";
+
+if (!empty($id)) {
+
+	$sql = "SELECT q.id, q.titulo, date_format(q.data, '%d/%m/%Y') dt,
+	q.numero, q.resumo, q.capa, q.valor, q.tipo_id, q.editora_id, 
+	t.tipo, 
+	e.nome 
+	FROM quadrinho q 
+	INNER JOIN editora e ON (e.id = q.editora_id)
+	INNER JOIN tipo t ON (q.tipo_id = t.id)
+	WHERE q.id = :id LIMIT 1";
+
+	$consulta = $pdo->prepare($sql);
+
+	$consulta->bindParam(":id", $id);
+
+	$consulta->execute();
+
+	$dados = $consulta->fetch(PDO::FETCH_OBJ);
+
+	// separar os dados
+	$id         = $dados->id;
+	$titulo     = $dados->titulo;
+	$data       = $dados->dt;
+	$numero     = $dados->numero;
+	$resumo     = $dados->resumo;
+	$capa       = $dados->capa; //apenas o valor
+	$valor      = number_format($dados->valor, 2, ",", ".");
+	$tipo_id    = $dados->tipo_id;
+	$editora_id = $dados->editora_id;
+	$nome		= $dados->nome;
+	$tipo       = $dados->tipo;
+	$imagem		= "../fotos/" . $capa . "p.jpg";
+} else
+	$id = '';
 
 ?>
 <div class="container">
@@ -16,96 +58,152 @@
 
 	<div class="clearfix"></div>
 
-	<form name="formCadastro" method="post"
-	action="salvar/quadrinho" data-parsley-validate enctype="multipart/form-data">
+	<form name="formCadastro" method="post" action="salvar/quadrinho" data-parsley-validate enctype="multipart/form-data">
 
-		<label for="id">ID</label>
-		<input type="text" name="id" id="id" readonly class="form-control"
-		value="<?=$id;?>">
+		<div class="row">
+			<div class="col-12 col-md-2">
+				<label for="id">ID</label>
+				<input type="text" id="id" name="id" readonly class="form-control" value="<?= $id; ?>">
+			</div>
 
-		<label for="titulo">Título do Quadrinho</label>
-		<input type="text" name="titulo" 
-		id="titulo" class="form-control"
-		required data-parsley-required-message="Por favor, preencha este campo"
-		value="<?=$titulo;?>">
+			<div class="col-12 col-md-10">
+				<label for="titulo">Título do Quadrinho</label>
+				<input type="text" id="titulo" name="titulo" class="form-control" required data-parsley-required-message="Por favor, preencha este campo" value="<?= $titulo; ?>">
+			</div>
 
-		<label for="tipo_id">Tipo de Quadrinho</label>
-		<select name="tipo_id" id="tipo_id"
-		class="form-control" required 
-		data-parsley-required-message="Selecione uma opção">
-			<option value=""></option>
-			<?php
-			$sql = "select id, tipo from tipo
-			order by tipo";
-			$consulta = $pdo->prepare($sql);
-			$consulta->execute();
+			<div class="col-12 col-md-6">
+				<label for="tipo_id">Tipo de Quadrinho </label>
+				<select name="tipo_id" id="tipo_id" class="form-control" required data-parsley-required-message="Selecione uma opção">
+					<option value="">
+						<?php
+						if (!empty($tipo)) {
+							echo $tipo;
+						} ?>
+					</option>
 
-			while ( $d = $consulta->fetch(PDO::FETCH_OBJ) ){
-				//separar os dados
-				$id 	= $d->id;
-				$tipo 	= $d->tipo;
+					<?php
 
-				echo '<option value="'.$id.'">'.$tipo.'</option>';
-			}
+					$sql = "SELECT id, tipo FROM tipo ORDER BY tipo";
 
-			?>
-		</select>
+					$consulta = $pdo->prepare($sql);
 
-		<label for="editora_id">Editora</label>
-		<select name="editora_id" id="editora_id"
-		class="form-control" required 
-		data-parsley-required-message="Selecione uma editora">
-			<option value=""></option>
-			<?php
-			$sql = "select id, nome from editora 
-				order by nome";
-			$consulta = $pdo->prepare($sql);
-			$consulta->execute();
+					$consulta->execute();
 
-			while ( $d = $consulta->fetch(PDO::FETCH_OBJ) ) {
-				//separar os dados
-				$id 	= $d->id;
-				$nome 	= $d->nome;
-				echo '<option value="'.$id.'">'.$nome.'</option>';
-			}
-			?>
-		</select>
+					while ($d = $consulta->fetch(PDO::FETCH_OBJ)) {
+						//separar os dados
+						$tipo_id	= $d->id;
+						$tipo		= $d->tipo;
 
-		<label for="capa">Capa do Quadrinho</label>
-		<input type="file" name="capa" id="capa"
-		class="form-control" accept=".jpg">
+						echo '<option value="' . $tipo_id . '">' . $tipo . '</option>';
+					}
 
-		<label for="numero">Número</label>
-		<input type="text" name="numero" id="numero"
-		required data-parsley-required-message="Preencha este campo" class="form-control">
+					?>
+				</select>
+			</div>
 
-		<label for="data">Data de Lançamento</label>
-		<input type="text" name="data" id="data"
-		required data-parsley-required-message="Preencha este campo" class="form-control">
+			<div class="col-12 col-md-6">
+				<!-- Listar editora -->
+				<label for="editora_id">Editora</label>
+				<input type="text" id="editora_id" name="editora_id" class="form-control" list="listaEditoras" 
+				required data-parsley-required-message="Seleciona uma editora">
+				<option value="">
+					<?php
+					if (!empty($editora_id)) {
+						echo "$nome - $editora_id";
+					} ?>
+				</option>
 
-		<label for="valor">Valor</label>
-		<input type="text" name="valor" id="valor"
-		required data-parsley-required-message="Preencha este campo" class="form-control">
+				<datalist id="listaEditoras">
 
-		<label for="resumo">Resumo/Descrição</label>
-		<textarea name="resumo" id="resumo" required 
-		data-parsley-required-message="Preencha este campo" class="form-control"></textarea>
+					<?php
+					$sql = "SELECT id, nome FROM editora ORDER BY nome";
 
-		<button type="submit" class="btn btn-success margin">
-			<i class="fas fa-check"></i> Gravar Dados
-		</button>
+					$consulta = $pdo->prepare($sql);
+					$consulta->execute();
+
+					while ($d = $consulta->fetch(PDO::FETCH_OBJ)) {
+						//separar os dados
+						$editora_id 	= $d->id;
+						$nome 			= $d->nome;
+						// vai mostrar um dropdown com o id e nome da editora para fazer o autocomplete
+						echo '<option value="' . $id . '">' . $nome . ' </option>';
+					}
+					?>
+
+				</datalist>
+			</div>
+
+			<div class="col-12 col-md-3">
+				<label for="numero">Número da Edição</label>
+				<input type="text" id="numero" name="numero" class="form-control" required data-parsley-required-message="Preencha este campo" value="<?= $numero ?>">
+			</div>
+
+			<div class="col-12 col-md-3">
+				<label for="data">Data de Lançamento</label>
+				<input type="text" id="data" name="data" class="form-control" required data-parsley-required-message="Preencha este campo" value="<?= $data ?>">
+			</div>
+
+			<div class="col-12 col-md-3">
+				<label for="valor">Valor</label>
+				<input type="text" id="valor" name="valor" class="form-control" required data-parsley-required-message="Preencha este campo" value="<?= $valor ?>">
+			</div>
+
+			<div class="col-12 col-md-12">
+				<label for="resumo">Resumo/Descrição</label>
+				<textarea id="resumo" name="resumo" class="form-control" required data-parsley-required-message="Preencha este campo"><?= $resumo ?>></textarea>
+			</div>
+
+			<div class="col-12 col-md-12">
+				<!-- Cadastrar capa -->
+				<?php
+				// só mostra que é required se for novo
+				$r = ' required data-parsley-required-message="Selecione uma foto"';
+
+				// se não estiver vazio, vai editar
+				if (!empty($id)) $r = '';
+
+				?>
+
+				<label for="capa">Capa do Quadrinho</label>
+				<input type="hidden" name="capa" value="<?= $capa; ?>">
+				<input type="file" id="capa" name="capa" class="form-control" accept=".jpeg, .jpg" <?= $r; ?>>
+
+				<?php
+				if (!empty($capa)) {
+					echo "<img src='$imagem' alt='$titulo' width='100px'>";
+				}
+				?>
+
+				<br>
+
+			</div>
+
+			<button type="submit" class="btn btn-success margin">
+				<i class="fas fa-check"></i> Gravar Dados
+			</button>
 	</form>
 
 </div>
 
+	<hr>
+	<?php
+		// verificar se estiver sendo editado para incluir formQ
+		if ( !empty ( $id ) ) include "cadastro/formQuadrinho.php";
+	?>
+
 <script>
 	$(document).ready(function() {
-  		$('#resumo').summernote();
+
+		$('#resumo').summernote();
+
 		$('#valor').maskMoney({
 			// modo de separar o valor
-			thousands: ".", decimal: ","
+			thousands: ".",
+			decimal: ","
 		});
+
 		$('#data').inputmask("99/99/9999");
+
 		$('#numero').inputmask("9999");
 	});
 </script>

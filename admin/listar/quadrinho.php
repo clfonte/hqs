@@ -57,7 +57,15 @@
                         <td>$dt</td>
                         <td>R$ $valor</td>
                         <td>$editora</td>
-                        <td></td>
+                        <td>
+                            <a href='cadastro/quadrinho/$id' class='btn btn-success btn-sm'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+
+                            <a href='javascript:excluir ( $id )' class='bnt btn-danger btn-sm'>
+                                <i class='fas fa-trash'></i>
+                            </a>
+                        </td>
                     </tr>";
                 }
             ?>
@@ -65,3 +73,13 @@
 
     </table>
 </div>
+
+<script>
+    // função que pergunta antes de excluir
+    function excluir ( id ) {
+        if ( confirm ("Deseja excluir este quadrinho?") ) {
+            // redirecionar para exclusão
+            location.href = "excluir/quadrinho/" + id;
+        }
+    }
+</script>

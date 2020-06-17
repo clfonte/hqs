@@ -15,7 +15,7 @@ if ( $_POST ) {
 
     //print_r ($_POST);
     foreach ( $_POST as $key => $value ) {
-        $$key =trim ( $value );
+        $$key = trim ( $value );
     }
 
     // print_r ($_FILES); print_r ($_POST);
